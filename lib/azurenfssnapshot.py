@@ -7,10 +7,9 @@ from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.subscription import SubscriptionClient
 
-
 class AzureNfsSnapshot(object):
     def __init__(self):
-        self.azconn = DefaultAzureCredential()
+        self.azconn = DefaultAzureCredential(exclude_shared_token_cache_credential=True)
         self.subscriptions_list = self.subscriptions_list()
         self.filestorage_list = self.get_all_filestorage(
             subscriptions_list=self.subscriptions_list)
@@ -42,12 +41,15 @@ class AzureNfsSnapshot(object):
     def _generate_sas_token(self, storage_account):
         # Get access key
         sa_client = StorageManagementClient(credential=self.azconn,
-                                            subscription_id=self.filestorage_list[storage_account].subscription_id)
+                                            subscription_id=
+                                            self.filestorage_list[
+                                                storage_account].subscription_id)
         key = sa_client.storage_accounts.list_keys(
             resource_group_name=
             self.filestorage_list[storage_account].resourcegroup,
             account_name=storage_account).keys[0].value
-        return generate_account_sas(account_name=storage_account,account_key=key,
+        return generate_account_sas(account_name=storage_account,
+                                    account_key=key,
                                     resource_types=ResourceTypes(
                                         service=True,
                                         object=True,
@@ -65,7 +67,8 @@ class AzureNfsSnapshot(object):
 
     def _get_sas_token(self, storage_account):
         if storage_account not in self.sas_token.keys():
-            self.sas_token[storage_account] = self._generate_sas_token(storage_account=storage_account)
+            self.sas_token[storage_account] = self._generate_sas_token(
+                storage_account=storage_account)
         return self.sas_token[storage_account]
 
     def list_snapshot(self, storage_account):
@@ -73,7 +76,9 @@ class AzureNfsSnapshot(object):
         file_service = ShareServiceClient(
             account_url=f"https://{storage_account}.file.core.windows.net/",
             credential=sas_token)
-        return [share for share in file_service.list_shares(include_snapshots=True) if share.snapshot]
+        return [share for share in
+                file_service.list_shares(include_snapshots=True) if
+                share.snapshot]
 
     def list_shares(self, storage_account):
         sas_token = self._get_sas_token(storage_account=storage_account)
