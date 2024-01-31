@@ -80,6 +80,16 @@ class AzureNfsSnapshot(object):
                 file_service.list_shares(include_snapshots=True) if
                 share.snapshot]
 
+    def get_last_snapshot(self, storage_account, share_name):
+        snapshot_list = [share.snapshot for share in self.list_snapshot(storage_account=storage_account) if share.name == share_name]
+        snapshot_list.sort(reverse=True)
+        try:
+            return snapshot_list[0]
+        except IndexError:
+            return False
+
+
+
     def list_shares(self, storage_account):
         sas_token = self._get_sas_token(storage_account=storage_account)
         file_service = ShareServiceClient(
