@@ -71,12 +71,15 @@ class AzureNfsSnapshot(object):
                 storage_account=storage_account)
         return self.sas_token[storage_account]
 
-    def list_snapshot(self, storage_account):
+    def list_snapshot(self, storage_account, share_name=None):
         sas_token = self._get_sas_token(storage_account=storage_account)
         file_service = ShareServiceClient(
             account_url=f"https://{storage_account}.file.core.windows.net/",
             credential=sas_token)
-        return [share for share in
+        if share_name:
+            return [share for share in file_service.list_shares(include_snapshots=True) if share.snapshot and share.name == share_name ]
+        else:
+            return [share for share in
                 file_service.list_shares(include_snapshots=True) if
                 share.snapshot]
 
@@ -114,4 +117,4 @@ class AzureNfsSnapshot(object):
         if share.snapshot:
             return share.delete_share()
         else:
-            return "Not a snapshot"
+            return f"{storage_account} - {share} - {snapshot} - Not a snapshot"
