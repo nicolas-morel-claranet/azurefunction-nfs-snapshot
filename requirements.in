@@ -1,0 +1,6 @@
+signalfx
+azure-storage-file-share
+azure-identity
+azure-mgmt-resource
+azure-mgmt-storage
+azure-mgmt-subscription
