@@ -4,7 +4,6 @@ import os
 import time
 import atexit
 from lib import azurenfssnapshot
-from datetime import datetime
 
 logger = logging.getLogger("nb_nfs_snapshot")
 log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
@@ -16,6 +15,7 @@ logger.addHandler(sh)
 sfx_logger = logging.getLogger("signalfx.ingest")
 sfx_logger.setLevel(log_level)
 sfx_logger.addHandler(sh)
+
 
 def run():
     logger.info("Starting job")
@@ -46,30 +46,37 @@ def run():
 
         for sa, value in az.filestorage_list.items():
             for share in az.list_shares(storage_account=sa):
-                sfx_gauge_value = len(az.list_snapshot(storage_account=sa, share_name=share.name))
+                sfx_gauge_value = len(
+                    az.list_snapshot(storage_account=sa, share_name=share.name)
+                )
 
                 metric_dimensions = {
-                    **dict({'storage_account_name': sa,
-                            'subscription_id': value.subscription_id,
-                            'env': value.tags['env'],
-                            'share_name': share.name
-                            }),
-                    **extra_dimensions
+                    **dict(
+                        {
+                            "storage_account_name": sa,
+                            "subscription_id": value.subscription_id,
+                            "env": value.tags["env"],
+                            "share_name": share.name,
+                        }
+                    ),
+                    **extra_dimensions,
                 }
 
                 sfx_metric = [
                     {
-                        'metric': 'fame.azure.nfs.nb_snapshot',
-                        'value': sfx_gauge_value,
-                        'timestamp': round(time.time() * 1000),
-                        'dimensions': metric_dimensions
+                        "metric": "fame.azure.nfs.nb_snapshot",
+                        "value": sfx_gauge_value,
+                        "timestamp": round(time.time() * 1000),
+                        "dimensions": metric_dimensions,
                     }
                 ]
                 logging.debug(
-                    f"send this metric for {sa} - {share.name} : {sfx_metric}")
+                    f"send this metric for {sa} - {share.name} : {sfx_metric}"
+                )
                 sfx.send(gauges=sfx_metric)
 
     logging.info("Job Done")
+
 
 if __name__ == "__main__":
     run()

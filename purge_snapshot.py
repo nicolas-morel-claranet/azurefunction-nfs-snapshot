@@ -20,18 +20,22 @@ def run():
 
     for sa, value in az.filestorage_list.items():
         logging.info(
-            f"Execute pruge snapshot on {sa} - subscription: {value.subscription_id}")
-        snapshots_list = sorted(az.list_snapshot(storage_account=sa),
-                                key=attrgetter('snapshot'))
+            f"Execute pruge snapshot on {sa} - subscription: {value.subscription_id}"
+        )
+        snapshots_list = sorted(
+            az.list_snapshot(storage_account=sa), key=attrgetter("snapshot")
+        )
         snapshot_diff = len(snapshots_list) - snapshot_history
         logger.info(
-            f"{sa} - Nb Snapshot : {len(snapshots_list)} - Diff - {str(snapshot_diff)}")
+            f"{sa} - Nb Snapshot : {len(snapshots_list)} - Diff - {str(snapshot_diff)}"
+        )
         if len(snapshots_list) > snapshot_history:
             for snapshot in snapshots_list[:snapshot_diff]:
                 logger.info(f"Delete {snapshot.snapshot} on {sa} - {snapshot.name}")
                 # az.delete_snapshot(storage_account=sa, share=snapshot.name, snapshot=snapshot.snapshot)
 
     logging.info("Job Done")
+
 
 if __name__ == "__main__":
     run()
