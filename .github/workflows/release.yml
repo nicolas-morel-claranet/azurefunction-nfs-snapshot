@@ -15,7 +15,7 @@ jobs:
       - name: Create ZIP file
         run: |
           sudo npm i -g azure-functions-core-tools@4 --unsafe-perm true
-          func pack --build-native-deps --python -o fame
+          func pack --build-native-deps --python -o aznfssnap
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./fame.zip
-          asset_name: fame.zip
+          asset_path: ./aznfssnap.zip
+          asset_name: aznfssnap.zip
           asset_content_type: application/zip
 
