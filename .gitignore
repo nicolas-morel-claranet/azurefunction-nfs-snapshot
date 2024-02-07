@@ -3,3 +3,8 @@ __pycache__/
 */__pycache__/
 local.settings.json
 .venv/
+venv/
+.virtualenv/
+virtualenv/
+.python_packages/
+__pycache__
