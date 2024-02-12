@@ -19,7 +19,7 @@ sfx_logger.addHandler(sh)
 
 
 def run():
-    logger.info("Starting job")
+    logger.info("Starting create_snapshot")
     sfx_token = os.environ.get("SFX_TOKEN")
     if not sfx_token:
         raise ValueError("Environment variable SFX_TOKEN not set")
@@ -96,7 +96,7 @@ def run():
                 )
                 sfx.send(gauges=sfx_metric)
 
-    logging.info("Job Done")
+    logging.info("create_snapshot - Job Done")
 
 
 if __name__ == "__main__":

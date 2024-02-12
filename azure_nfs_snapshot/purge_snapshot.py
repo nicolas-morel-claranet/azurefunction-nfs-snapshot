@@ -12,7 +12,7 @@ logger.addHandler(sh)
 
 
 def run():
-    logger.info("Starting job")
+    logger.info("Starting purge_snapshot")
     snapshot_history = os.environ.get("SNAPSHOT_HISTORY", 7)
 
     logging.info("Init AzureNfsSnapshot class")
@@ -27,14 +27,14 @@ def run():
         )
         snapshot_diff = len(snapshots_list) - snapshot_history
         logger.info(
-            f"{sa} - Nb Snapshot : {len(snapshots_list)} - Diff - {str(snapshot_diff)}"
+            f"Storage Acccount : {sa} - Nb Snapshot : {len(snapshots_list)}"
         )
         if len(snapshots_list) > snapshot_history:
             for snapshot in snapshots_list[:snapshot_diff]:
                 logger.info(f"Delete {snapshot.snapshot} on {sa} - {snapshot.name}")
                 # az.delete_snapshot(storage_account=sa, share=snapshot.name, snapshot=snapshot.snapshot)
 
-    logging.info("Job Done")
+    logging.info("purge_snapshot - Job Done")
 
 
 if __name__ == "__main__":
