@@ -111,6 +111,7 @@ class AzureNfsSnapshot(object):
 
     def list_shares(self, storage_account):
         sas_token = self._get_sas_token(storage_account=storage_account)
+        print(f"{storage_account} sas_token : {sas_token}")
         file_service = ShareServiceClient(
             account_url=f"https://{storage_account}.file.core.windows.net/",
             credential=sas_token,
@@ -119,6 +120,7 @@ class AzureNfsSnapshot(object):
 
     def create_snapshot(self, storage_account, share):
         sas_token = self._get_sas_token(storage_account=storage_account)
+        print(f"{storage_account} sas_token : {sas_token}")
         file_service = ShareServiceClient(
             account_url=f"https://{storage_account}.file.core.windows.net/",
             credential=sas_token,
@@ -128,6 +130,7 @@ class AzureNfsSnapshot(object):
 
     def delete_snapshot(self, storage_account, share, snapshot):
         sas_token = self._get_sas_token(storage_account=storage_account)
+        print(f"{storage_account} sas_token : {sas_token}")
         file_service = ShareServiceClient(
             account_url=f"https://{storage_account}.file.core.windows.net/",
             credential=sas_token,
