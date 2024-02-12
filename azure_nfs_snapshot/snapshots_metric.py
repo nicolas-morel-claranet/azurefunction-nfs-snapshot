@@ -43,7 +43,8 @@ def run():
     with sfx_clt.ingest(sfx_token) as sfx:
         atexit.register(sfx.stop)
         logging.info("Collect metric for number of snapshots")
-
+        logging.info(
+            f"Nb of Storage Account detected: {len(az.filestorage_list.items())}")
         for sa, value in az.filestorage_list.items():
             for share in az.list_shares(storage_account=sa):
                 sfx_gauge_value = len(

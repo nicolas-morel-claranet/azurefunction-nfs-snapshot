@@ -17,7 +17,8 @@ def run():
 
     logging.info("Init AzureNfsSnapshot class")
     az = azurenfssnapshot.AzureNfsSnapshot()
-
+    logging.info(
+        f"Nb of Storage Account detected: {len(az.filestorage_list.items())}")
     for sa, value in az.filestorage_list.items():
         logging.info(
             f"Execute pruge snapshot on {sa} - subscription: {value.subscription_id}"

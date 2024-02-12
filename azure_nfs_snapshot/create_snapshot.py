@@ -45,6 +45,7 @@ def run():
         atexit.register(sfx.stop)
 
         logging.info("Start Parsing all Storage Account and shares for snapshots")
+        logging.info(f"Nb of Storage Account detected: {len(az.filestorage_list.items())}")
         for sa, value in az.filestorage_list.items():
             logging.info(
                 f"Execute snapshot on {sa} - subscription: {value.subscription_id}"
