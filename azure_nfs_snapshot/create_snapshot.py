@@ -52,7 +52,7 @@ def run():
             )
             for share in az.list_shares(storage_account=sa):
                 logging.info(f"Create snapshot on {sa} - {share.name}")
-                # az.create_snapshot(storage_account=sa, share=share.name)
+                az.create_snapshot(storage_account=sa, share=share.name)
 
                 last_snapshot = az.get_last_snapshot(
                     storage_account=sa, share_name=share.name

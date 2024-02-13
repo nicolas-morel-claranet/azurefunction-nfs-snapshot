@@ -33,7 +33,7 @@ def run():
         if len(snapshots_list) > snapshot_history:
             for snapshot in snapshots_list[:snapshot_diff]:
                 logger.info(f"Delete {snapshot.snapshot} on {sa} - {snapshot.name}")
-                # az.delete_snapshot(storage_account=sa, share=snapshot.name, snapshot=snapshot.snapshot)
+                az.delete_snapshot(storage_account=sa, share=snapshot.name, snapshot=snapshot.snapshot)
 
     logging.info("purge_snapshot - Job Done")
 
